@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping
 
-public class MainController {
+public class ChatController {
     @GetMapping
     public String index(){
         return "index";
     }
 }
-
