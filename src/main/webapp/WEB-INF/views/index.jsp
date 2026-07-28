@@ -522,40 +522,39 @@
                     </div>
                 </div>
 
-                <!-- User Query -->
-                <c:if test="${not empty lastMessage}">
+                <!-- Database History Loop -->
+                <c:forEach items="${history}" var="chat">
+                    <!-- User Message -->
                     <div class="message-row message-row-user">
                         <div class="avatar user">나</div>
                         <div class="message-content-box">
                             <div class="message-header">
                                 사용자
-                                <span class="message-time">방금 전</span>
+                                <span class="message-time"><c:out value="${chat.createdAt}"/></span>
                             </div>
                             <div class="message-bubble">
-                                <c:out value="${lastMessage}"/>
+                                <c:out value="${chat.question}"/>
                             </div>
                         </div>
                     </div>
-                </c:if>
 
-                <!-- Bot Response -->
-                <c:if test="${not empty answer}">
+                    <!-- Bot Message -->
                     <div class="message-row">
                         <div class="avatar bot">FD</div>
                         <div class="message-content-box" style="width: 100%;">
                             <div class="message-header">
-                                FatDog Chat
-                                <span class="message-time">방금 전</span>
+                                FatDog Chat (${chat.provider})
+                                <span class="message-time"><c:out value="${chat.createdAt}"/></span>
                             </div>
-                            <div class="message-bubble" id="answer-bubble-container" style="background-color: var(--color-bg-card);">
+                            <div class="message-bubble bot-response-bubble" style="background-color: var(--color-bg-card);">
                                 <!-- Raw answer value container (hidden) -->
-                                <div id="answer-raw" hidden><c:out value="${answer}"/></div>
+                                <div class="answer-raw" hidden><c:out value="${chat.answer}"/></div>
                                 <!-- Target container for dynamic rendering -->
-                                <div id="answer-container"></div>
+                                <div class="answer-container"></div>
                             </div>
                         </div>
                     </div>
-                </c:if>
+                </c:forEach>
             </div>
 
             <!-- Chat Input Area -->
@@ -612,37 +611,38 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Parse and render the answer
-        const rawEl = document.getElementById('answer-raw');
-        const containerEl = document.getElementById('answer-container');
-        
-        if (rawEl && containerEl) {
-            const rawText = rawEl.textContent.trim();
-            const movieData = parseMovieDto(rawText);
+        // Parse and render all dynamic bot answers in history
+        const responseBubbles = document.querySelectorAll('.bot-response-bubble');
+        responseBubbles.forEach(bubble => {
+            const rawEl = bubble.querySelector('.answer-raw');
+            const containerEl = bubble.querySelector('.answer-container');
+            if (rawEl && containerEl && !containerEl.dataset.rendered) {
+                const rawText = rawEl.textContent.trim();
+                const movieData = parseMovieDto(rawText);
 
-            if (movieData) {
-                // Render elegant structured block matching the modern theme
-                let html = '<div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.05rem; color: var(--color-primary);">🍿 ' + movieData.title + '</div>' +
-                           '<div style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.75rem; font-weight: 500;">' + movieData.genre + ' • ' + (movieData.year ? movieData.year + '년 작' : '연도 미상') + '</div>' +
-                           '<div style="font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary);">' + movieData.reason + '</div>';
-                
-                if (movieData.metadata) {
-                    html += '<div class="meta-wrapper">' +
-                            '<button type="button" class="meta-toggle-btn" onclick="toggleMetadata(this)">' +
-                            '기술 정보 보기' +
-                            '</button>' +
-                            '<div class="meta-details">' + escapeHtml(movieData.metadata) + '</div>' +
-                            '</div>';
+                if (movieData) {
+                    let html = '<div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.05rem; color: var(--color-primary);">🍿 ' + movieData.title + '</div>' +
+                               '<div style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.75rem; font-weight: 500;">' + movieData.genre + ' • ' + (movieData.year ? movieData.year + '년 작' : '연도 미상') + '</div>' +
+                               '<div style="font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary);">' + movieData.reason + '</div>';
+                    
+                    if (movieData.metadata) {
+                        html += '<div class="meta-wrapper">' +
+                                '<button type="button" class="meta-toggle-btn" onclick="toggleMetadata(this)">' +
+                                '기술 정보 보기' +
+                                '</button>' +
+                                '<div class="meta-details">' + escapeHtml(movieData.metadata) + '</div>' +
+                                '</div>';
+                    }
+                    containerEl.innerHTML = html;
+                } else {
+                    containerEl.innerHTML = marked.parse(rawText);
                 }
-                containerEl.innerHTML = html;
-            } else {
-                // Fallback to normal text/markdown rendering
-                containerEl.innerHTML = marked.parse(rawText);
+                containerEl.dataset.rendered = 'true';
             }
+        });
 
-            // Scroll to the bottom again after content expands
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        // Scroll to the bottom again after content expands
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
     // Show loading animation
