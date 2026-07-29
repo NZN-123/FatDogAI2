@@ -1,4 +1,4 @@
-package org.example.springai;
+package org.example.fatdogai2;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -7,7 +7,7 @@ public class ServletInitializer extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SpringaiApplication.class);
+        return application.sources(FatDogAi2Application.class);
     }
 
 }

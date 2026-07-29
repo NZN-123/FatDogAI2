@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### dotenv
 .env*
-!*.sample
+!.env.*.example
+!.env.*.sample
