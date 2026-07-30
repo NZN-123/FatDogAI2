@@ -1,5 +1,6 @@
 package org.example.fatdogai2.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.fatdogai2.domain.ModelProvider;
 import org.example.fatdogai2.dto.ChatDTO;
@@ -18,15 +19,21 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
         model.addAttribute("providers", ModelProvider.values());
-        model.addAttribute("history", chatService.getChatHistory());
+        model.addAttribute("history", chatService.getChatHistory(session.getId()));
         return "index";
     }
 
     @PostMapping
-    public String chat(@ModelAttribute ChatDTO dto) {
-        chatService.chat(dto);
+    public String chat(@ModelAttribute ChatDTO dto, HttpSession session) {
+        chatService.chat(dto, session.getId());
+        return "redirect:/";
+    }
+
+    @PostMapping("/history/clear")
+    public String clearChatHistory(HttpSession session) {
+        chatService.clearChatHistory(session.getId());
         return "redirect:/";
     }
 }
