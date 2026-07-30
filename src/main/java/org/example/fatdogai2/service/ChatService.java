@@ -17,20 +17,18 @@ public class ChatService {
     private final AIChatService aiChatService;
     private final ChatRepository chatRepository;
 
-    @Transactional
     public String chat(ChatDTO dto, String conversationId) {
-        Chat chatRecord = new Chat();
-        chatRecord.setQuestion(dto.message());
-        chatRecord.setProvider(dto.provider().name());
-        chatRecord.setConversationId(conversationId);
-
         List<Chat> recentHistory = new ArrayList<>(
                 chatRepository.findRecentActiveByConversationId(conversationId));
         Collections.reverse(recentHistory);
 
         String answer = aiChatService.chat(dto, recentHistory);
 
+        Chat chatRecord = new Chat();
+        chatRecord.setQuestion(dto.message());
         chatRecord.setAnswer(answer);
+        chatRecord.setProvider(dto.provider().name());
+        chatRecord.setConversationId(conversationId);
         chatRepository.save(chatRecord);
         return answer;
     }
