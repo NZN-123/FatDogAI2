@@ -7,5 +7,7 @@ import java.util.List;
 public interface ChatRepository {
     Chat save(Chat chat);
 
-    List<Chat> findAll();
+    List<Chat> findActiveByConversationId(String conversationId);
+
+    List<Chat> findRecentActiveByConversationId(String conversationId);
 }

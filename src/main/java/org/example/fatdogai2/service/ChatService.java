@@ -7,6 +7,8 @@ import org.example.fatdogai2.repository.ChatRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,12 +18,17 @@ public class ChatService {
     private final ChatRepository chatRepository;
 
     @Transactional
-    public String chat(ChatDTO dto) {
+    public String chat(ChatDTO dto, String conversationId) {
         Chat chatRecord = new Chat();
         chatRecord.setQuestion(dto.message());
         chatRecord.setProvider(dto.provider().name());
+        chatRecord.setConversationId(conversationId);
 
-        String answer = aiChatService.chat(dto);
+        List<Chat> recentHistory = new ArrayList<>(
+                chatRepository.findRecentActiveByConversationId(conversationId));
+        Collections.reverse(recentHistory);
+
+        String answer = aiChatService.chat(dto, recentHistory);
 
         chatRecord.setAnswer(answer);
         chatRepository.save(chatRecord);
@@ -29,7 +36,13 @@ public class ChatService {
     }
 
     @Transactional(readOnly = true)
-    public List<Chat> getChatHistory() {
-        return chatRepository.findAll();
+    public List<Chat> getChatHistory(String conversationId) {
+        return chatRepository.findActiveByConversationId(conversationId);
+    }
+
+    @Transactional
+    public void clearChatHistory(String conversationId) {
+        chatRepository.findActiveByConversationId(conversationId)
+                .forEach(Chat::changeDeleted);
     }
 }

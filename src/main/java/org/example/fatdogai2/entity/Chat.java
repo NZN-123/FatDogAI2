@@ -33,6 +33,16 @@ public class Chat implements BaseEntity {
 
     private LocalDateTime createdAt;
 
+    @Column(name = "conversation_id", length = 100)
+    private String conversationId;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
+    public void changeDeleted() {
+        this.isDeleted = true;
+    }
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

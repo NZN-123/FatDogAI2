@@ -502,7 +502,9 @@
                     <span class="chat-dot"></span>
                     실시간 대화 채널
                 </div>
-                <a href="/" class="nav-link" style="font-size: 0.8rem; text-decoration: underline;">대화 초기화</a>
+                <form method="post" action="/history/clear">
+                    <button type="submit" class="nav-link" style="font-size: 0.8rem; text-decoration: underline; background: none; border: none; cursor: pointer;">대화 초기화</button>
+                </form>
             </div>
 
             <!-- Messages Area -->
