@@ -466,136 +466,135 @@
 </head>
 <body>
 
-<!-- Header Navigation -->
-<nav class="navbar">
-    <div class="navbar-container">
-        <a href="/" class="logo-link">
-            <div class="logo-icon">FD</div>
-            <span>FatDog Chat</span>
-        </a>
-        <ul class="nav-menu">
-            <li><a href="/" class="nav-link active">챗봇 대화방</a></li>
-            <li><a href="#" class="nav-link" onclick="alert('준비 중인 서비스 설명 페이지입니다.')">서비스 소개</a></li>
-            <li><a href="#" class="nav-link" onclick="alert('준비 중인 고객 지원 페이지입니다.')">고객 지원</a></li>
-        </ul>
-    </div>
-</nav>
-
-<!-- Main Content Layout -->
-<div class="main-wrapper">
-    <!-- Hero Introduction Card -->
-    <section class="hero-card">
-        <h2 class="hero-title">
-            FatDog 스마트 어시스턴트
-            <span class="hero-badge">v1.2</span>
-        </h2>
-        <p class="hero-desc">
-            업무 지식 탐색, 글쓰기, 기획 등 다양한 분야의 질문에 스마트하게 답변해 드립니다.
-            궁금한 내용을 아래 대화창에 입력해 보세요.
-        </p>
-    </section>
-
-    <!-- Chat Console Card -->
-    <section class="chat-card">
-        <div class="chat-card-header">
-            <div class="chat-card-title">
-                <span class="chat-dot"></span>
-                실시간 대화 채널
-            </div>
-            <a href="/" class="nav-link" style="font-size: 0.8rem; text-decoration: underline;">대화 초기화</a>
+    <!-- Header Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="logo-link">
+                <div class="logo-icon">FD</div>
+                <span>FatDog Chat</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link active">챗봇 대화방</a></li>
+                <li><a href="#" class="nav-link" onclick="alert('준비 중인 서비스 설명 페이지입니다.')">서비스 소개</a></li>
+                <li><a href="#" class="nav-link" onclick="alert('준비 중인 고객 지원 페이지입니다.')">고객 지원</a></li>
+            </ul>
         </div>
+    </nav>
 
-        <!-- Messages Area -->
-        <div class="chat-messages" id="chat-messages">
-            <!-- Welcome Message from Bot -->
-            <div class="message-row">
-                <div class="avatar bot">FD</div>
-                <div class="message-content-box">
-                    <div class="message-header">
-                        FatDog Chat
-                        <span class="message-time">오늘</span>
-                    </div>
-                    <div class="message-bubble">
-                        안녕하세요! FatDog Chat 어시스턴트입니다.
-                        일상적인 대화부터 업무, 코딩, 기획 등 필요한 내용을 자유롭게 물어보세요.
-                    </div>
+    <!-- Main Content Layout -->
+    <div class="main-wrapper">
+        <!-- Hero Introduction Card -->
+        <section class="hero-card">
+            <h2 class="hero-title">
+                FatDog 스마트 어시스턴트
+                <span class="hero-badge">v1.2</span>
+            </h2>
+            <p class="hero-desc">
+                업무 지식 탐색, 글쓰기, 기획 등 다양한 분야의 질문에 스마트하게 답변해 드립니다.
+                궁금한 내용을 아래 대화창에 입력해 보세요.
+            </p>
+        </section>
+
+        <!-- Chat Console Card -->
+        <section class="chat-card">
+            <div class="chat-card-header">
+                <div class="chat-card-title">
+                    <span class="chat-dot"></span>
+                    실시간 대화 채널
                 </div>
+                <a href="/" class="nav-link" style="font-size: 0.8rem; text-decoration: underline;">대화 초기화</a>
             </div>
 
-            <!-- User Query -->
-            <c:if test="${not empty lastMessage}">
-                <div class="message-row message-row-user">
-                    <div class="avatar user">나</div>
-                    <div class="message-content-box">
-                        <div class="message-header">
-                            사용자
-                            <span class="message-time">방금 전</span>
-                        </div>
-                        <div class="message-bubble">
-                            <c:out value="${lastMessage}"/>
-                        </div>
-                    </div>
-                </div>
-            </c:if>
-
-            <!-- Bot Response -->
-            <c:if test="${not empty answer}">
+            <!-- Messages Area -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Welcome Message from Bot -->
                 <div class="message-row">
                     <div class="avatar bot">FD</div>
-                    <div class="message-content-box" style="width: 100%;">
+                    <div class="message-content-box">
                         <div class="message-header">
                             FatDog Chat
-                            <span class="message-time">방금 전</span>
+                            <span class="message-time">오늘</span>
                         </div>
-                        <div class="message-bubble" id="answer-bubble-container" style="background-color: var(--color-bg-card);">
-                            <!-- Raw answer value container (hidden) -->
-                            <div id="answer-raw" hidden><c:out value="${answer}"/></div>
-                            <!-- Target container for dynamic rendering -->
-                            <div id="answer-container"></div>
+                        <div class="message-bubble">
+                            안녕하세요! FatDog Chat 어시스턴트입니다.
+                            일상적인 대화부터 업무, 코딩, 기획 등 필요한 내용을 자유롭게 물어보세요.
                         </div>
                     </div>
                 </div>
-            </c:if>
-        </div>
 
-        <!-- Chat Input Area -->
-        <div class="chat-input-bar">
-            <form method="post" class="chat-input-form" onsubmit="showLoading()">
-                <div class="provider-wrapper">
-                    <select name="provider" class="provider-dropdown" id="provider-select">
-                        <c:forEach items="${providers}" var="provider">
-                            <option value="${provider}" <c:if test="${provider == lastProvider}">selected</c:if>>${provider}</option>
-                        </c:forEach>
-                    </select>
-                    <i data-lucide="chevron-down" class="provider-chevron" style="width: 12px; height: 12px;"></i>
-                </div>
-
-                <input name="message" id="message-input" class="message-text-input" placeholder="이곳에 메시지를 입력하세요..." required autocomplete="off">
-
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <!-- Loading Indicator -->
-                    <div id="loading-box" class="loading-box">
-                        <span>생각 중</span>
-                        <div class="loading-dots">
-                            <span class="loading-dot"></span>
-                            <span class="loading-dot"></span>
-                            <span class="loading-dot"></span>
+                <!-- Database History Loop -->
+                <c:forEach items="${history}" var="chat">
+                    <!-- User Message -->
+                    <div class="message-row message-row-user">
+                        <div class="avatar user">나</div>
+                        <div class="message-content-box">
+                            <div class="message-header">
+                                사용자
+                                <span class="message-time"><c:out value="${chat.createdAt}"/></span>
+                            </div>
+                            <div class="message-bubble">
+                                <c:out value="${chat.question}"/>
+                            </div>
                         </div>
                     </div>
-                    <button class="submit-btn" type="submit">전송</button>
-                </div>
-            </form>
-        </div>
-    </section>
-</div>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="footer-container">
-        <span>Powered by Spring AI Framework & Gemini Client</span>
-        <span>© 2026 FatDog Service. All Rights Reserved.</span>
+                    <!-- Bot Message -->
+                    <div class="message-row">
+                        <div class="avatar bot">FD</div>
+                        <div class="message-content-box" style="width: 100%;">
+                            <div class="message-header">
+                                FatDog Chat (${chat.provider})
+                                <span class="message-time"><c:out value="${chat.createdAt}"/></span>
+                            </div>
+                            <div class="message-bubble bot-response-bubble" style="background-color: var(--color-bg-card);">
+                                <!-- Raw answer value container (hidden) -->
+                                <div class="answer-raw" hidden><c:out value="${chat.answer}"/></div>
+                                <!-- Target container for dynamic rendering -->
+                                <div class="answer-container"></div>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+
+            <!-- Chat Input Area -->
+            <div class="chat-input-bar">
+                <form method="post" class="chat-input-form" onsubmit="showLoading()">
+                    <div class="provider-wrapper">
+                        <select name="provider" class="provider-dropdown" id="provider-select">
+                            <c:forEach items="${providers}" var="provider">
+                                <option value="${provider}" <c:if test="${provider == lastProvider}">selected</c:if>>${provider}</option>
+                            </c:forEach>
+                        </select>
+                        <i data-lucide="chevron-down" class="provider-chevron" style="width: 12px; height: 12px;"></i>
+                    </div>
+
+                    <input name="message" id="message-input" class="message-text-input" placeholder="이곳에 메시지를 입력하세요..." required autocomplete="off">
+
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <!-- Loading Indicator -->
+                        <div id="loading-box" class="loading-box">
+                            <span>생각 중</span>
+                            <div class="loading-dots">
+                                <span class="loading-dot"></span>
+                                <span class="loading-dot"></span>
+                                <span class="loading-dot"></span>
+                            </div>
+                        </div>
+                        <button class="submit-btn" type="submit">전송</button>
+                    </div>
+                </form>
+            </div>
+        </section>
     </div>
-</footer>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <span>Powered by Spring AI Framework & Gemini Client</span>
+            <span>© 2026 FatDog Service. All Rights Reserved.</span>
+        </div>
+    </footer>
 
 <!-- JS Processing -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -612,37 +611,38 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Parse and render the answer
-        const rawEl = document.getElementById('answer-raw');
-        const containerEl = document.getElementById('answer-container');
+        // Parse and render all dynamic bot answers in history
+        const responseBubbles = document.querySelectorAll('.bot-response-bubble');
+        responseBubbles.forEach(bubble => {
+            const rawEl = bubble.querySelector('.answer-raw');
+            const containerEl = bubble.querySelector('.answer-container');
+            if (rawEl && containerEl && !containerEl.dataset.rendered) {
+                const rawText = rawEl.textContent.trim();
+                const movieData = parseMovieDto(rawText);
 
-        if (rawEl && containerEl) {
-            const rawText = rawEl.textContent.trim();
-            const movieData = parseMovieDto(rawText);
+                if (movieData) {
+                    let html = '<div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.05rem; color: var(--color-primary);">🍿 ' + movieData.title + '</div>' +
+                               '<div style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.75rem; font-weight: 500;">' + movieData.genre + ' • ' + (movieData.year ? movieData.year + '년 작' : '연도 미상') + '</div>' +
+                               '<div style="font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary);">' + movieData.reason + '</div>';
 
-            if (movieData) {
-                // Render elegant structured block matching the modern theme
-                let html = '<div style="font-weight: 700; margin-bottom: 0.25rem; font-size: 1.05rem; color: var(--color-primary);">🍿 ' + movieData.title + '</div>' +
-                    '<div style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.75rem; font-weight: 500;">' + movieData.genre + ' • ' + (movieData.year ? movieData.year + '년 작' : '연도 미상') + '</div>' +
-                    '<div style="font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary);">' + movieData.reason + '</div>';
-
-                if (movieData.metadata) {
-                    html += '<div class="meta-wrapper">' +
-                        '<button type="button" class="meta-toggle-btn" onclick="toggleMetadata(this)">' +
-                        '기술 정보 보기' +
-                        '</button>' +
-                        '<div class="meta-details">' + escapeHtml(movieData.metadata) + '</div>' +
-                        '</div>';
+                    if (movieData.metadata) {
+                        html += '<div class="meta-wrapper">' +
+                                '<button type="button" class="meta-toggle-btn" onclick="toggleMetadata(this)">' +
+                                '기술 정보 보기' +
+                                '</button>' +
+                                '<div class="meta-details">' + escapeHtml(movieData.metadata) + '</div>' +
+                                '</div>';
+                    }
+                    containerEl.innerHTML = html;
+                } else {
+                    containerEl.innerHTML = marked.parse(rawText);
                 }
-                containerEl.innerHTML = html;
-            } else {
-                // Fallback to normal text/markdown rendering
-                containerEl.innerHTML = marked.parse(rawText);
+                containerEl.dataset.rendered = 'true';
             }
+        });
 
-            // Scroll to the bottom again after content expands
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+        // Scroll to the bottom again after content expands
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
     // Show loading animation
@@ -668,22 +668,18 @@
     // Helper: Parse DTO from response string
     function parseMovieDto(text) {
         if (!text) return null;
-
         const dtoPrefix = "MovieRecommendationDTO[";
         const startIdx = text.indexOf(dtoPrefix);
-
         if (startIdx !== -1) {
             const endIdx = text.indexOf("]", startIdx);
             if (endIdx !== -1) {
                 const dtoContent = text.substring(startIdx + dtoPrefix.length, endIdx);
                 const metadataContent = text.substring(endIdx + 1).trim();
-
                 // Extract using lazy matching up to key indicators
                 const titleMatch = dtoContent.match(/title=(.*?)(?=\s*,\s*year=)/s);
                 const yearMatch = dtoContent.match(/year=(\d+)/);
                 const genreMatch = dtoContent.match(/genre=(.*?)(?=\s*,\s*reason=)/s);
                 const reasonMatch = dtoContent.match(/reason=(.*)/s);
-
                 if (titleMatch && yearMatch && genreMatch && reasonMatch) {
                     return {
                         title: titleMatch[1].trim(),
